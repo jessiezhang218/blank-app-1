@@ -1,6 +1,8 @@
 import streamlit as st
+import pandas as pd
 
-st.title("🎈 My new app")
-st.write(
-    "Let's start building! For help and inspiration, head over to [docs.streamlit.io](https://docs.streamlit.io/)."
-)
+st.title("Wine Quality Prediction App")
+
+df = pd.read_csv("winequality-red.csv")
+st.write("Dataset preview:")
+st.dataframe(df.head())
