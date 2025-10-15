@@ -1,8 +1,12 @@
 import streamlit as st
-import pandas as pd
 
-st.title("Wine Quality Prediction App")
+st.set_page_config(page_title="Wine Quality Prediction App", page_icon="🍷")
 
-df = pd.read_csv("winequality-red.csv")
-st.write("Dataset preview:")
-st.dataframe(df.head())
+st.title("🍷 Wine Quality Prediction App")
+st.markdown("""
+Welcome to our app!  
+Navigate through the sidebar to explore our project:
+- **Landing Page** – Learn about the problem and dataset  
+- **Visualization Page** – Explore key insights  
+- **Prediction Page** – Predict wine quality using Linear Regression  
+""")
