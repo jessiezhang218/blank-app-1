@@ -1,127 +1,223 @@
 import streamlit as st
-import pandas as pd 
+import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-import sklearn
-from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 
+# --- PAGE CONFIG ---
+st.set_page_config(
+    page_title="Wine Quality Prediction App 🍷", 
+    page_icon="🍇",
+    layout="wide"
+)
 
-st.set_page_config(page_title="Wine Quality Prediction App", page_icon="🍷")
-
-st.title("🍷 Wine Quality Prediction App")
+# --- WINE THEME (beige + burgundy) ---
 st.markdown("""
-Welcome to our app!  
-Navigate through the sidebar to explore our project:
-- **Landing Page** – Learn about the problem and dataset  
-- **Visualization Page** – Explore key insights  
-- **Prediction Page** – Predict wine quality using Linear Regression  
-""")
+    <style>
+    .stApp {
+        background-color: #f7f3ef;
+        color: #4b0d1a;
+        font-family: 'Georgia', serif;
+    }
+    h1, h2, h3, h4, h5 {
+        color: #720026 !important;
+        font-family: 'Playfair Display', serif;
+    }
+    .stSidebar {
+        background-color: #f4ebe2 !important;
+        color: #4b0d1a !important;
+    }
+    .stSelectbox, .stSlider, .stMultiSelect, .stButton>button {
+        color: #4b0d1a !important;
+    }
+    .stMetric {
+        background-color: #f0e3da !important;
+        border-radius: 10px;
+        padding: 5px;
+    }
+    hr {
+        border-top: 1px solid #a34a54;
+    }
+    .feature-card {
+        background-color: #f0e3da;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #720026;
+        margin: 10px 0;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- LOAD DATA ---
 df = pd.read_csv("winequality-red.csv")
-st.sidebar.title("Wine")
-page = st.sidebar.selectbox("Select Page",["Introduction","Visualization","Prediction"])
 
-st.write("   ")
+# --- SIDEBAR NAVIGATION ---
+st.sidebar.title("🍷 Navigation")
+st.sidebar.markdown("Navigate through different sections of the app.")
+page = st.sidebar.radio(
+    "Go to section:",
+    ["🏠 Introduction", "📊 Visualization", "🔮 Prediction"]
+)
 
+# --- PAGE TITLE ---
+st.title("🍇 Wine Quality Prediction App")
 
-if page == "Introduction":
-    st.subheader("01 Introduction")
-    st.markdown("Include preview on your topic here.")
+# Only show welcome message on Introduction page
+if page == "🏠 Introduction":
+    st.markdown("""
+    Welcome to our Wine Quality Prediction App!  
 
+    Navigate through the sidebar to explore our project:
 
-    st.markdown("##### Data Preview")
-    rows = st.slider("Select a number of rows to display",5,20,5)
-    st.dataframe(df.head(rows))
+    - **🏠 Introduction** – Explore dataset structure and statistics  
+    - **📊 Visualization** – Discover key insights through charts  
+    - **🔮 Prediction** – Predict wine quality using Linear Regression  
+    """)
 
-    st.markdown("##### Missing Values")
-    missing = df.isnull().sum()
-    if missing.sum() == 0:
-        st.success("No missing values found!")
-    else:
-        st.warning("You have missing values!")
+    st.markdown("""
+    Explore, analyze, and predict wine quality through data and machine learning.  
+    Our goal: to understand what makes a fine wine truly exceptional.
+    """)
 
-    st.markdown("##### Summary Statistics")
-    if st.toggle("Show Describe Table"):
-        st.dataframe(df.describe())
+# --- INTRODUCTION PAGE ---
+if page == "🏠 Introduction":
+    st.header("01 • Introduction")
+    st.markdown("""
+    Wine tasting is both an art and a science.
+    Wineries need a reliable way to predict wine quality before bottling or selling. By analyzing the wine's chemical properties, we can estimate its quality score. This helps producers improve quality control, adjust production, and set pricing strategies.
+    """)
 
+    st.subheader("Dataset Preview")
+    st.dataframe(df.head(8), use_container_width=True)
 
-elif page == "Visualization":
-    st.subheader("02 Visualization")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("Data Quality")
+        missing = df.isnull().sum()
+        if missing.sum() == 0:
+            st.success("✨ No missing values found")
+        else:
+            st.warning("⚠️ Some missing values detected")
+        
+        st.metric("Total Samples", len(df))
+        st.metric("Number of Features", len(df.columns) - 1)
 
-    st.markdown("###### Quality distribution")
-    fig1, ax1 = plt.subplots(figsize=(7, 4))
-    sns.countplot(x="quality", data=df, ax=ax1)
-    ax1.set_xlabel("Quality (score)")
-    ax1.set_ylabel("Count")
-    ax1.grid(True, axis="y", linestyle="--", alpha=0.3)
-    st.pyplot(fig1)
+    with col2:
+        st.subheader("Quality Overview")
+        st.metric("Average Quality", f"{df['quality'].mean():.2f}")
+        st.metric("Quality Range", f"{df['quality'].min()}-{df['quality'].max()}")
 
-    st.markdown("###### Correlation heatmap")
-    corr = df.corr(numeric_only=True)
-    fig2, ax2 = plt.subplots(figsize=(9, 7))
-    sns.heatmap(corr, cmap="coolwarm", center=0, linewidths=0.3, ax=ax2)
-    st.pyplot(fig2)
+    st.subheader("Summary Statistics")
+    st.dataframe(df.describe(), use_container_width=True)
 
-    st.markdown("###### Alcohol vs. Quality (with jitter)")
-    fig3, ax3 = plt.subplots(figsize=(7, 4))
-    sns.stripplot(x="quality", y="alcohol", data=df, alpha=0.6, ax=ax3)
-    ax3.set_ylabel("Alcohol")
-    ax3.grid(True, axis="y", linestyle="--", alpha=0.3)
-    st.pyplot(fig3)
+# --- VISUALIZATION PAGE ---
+elif page == "📊 Visualization":
+    st.header("02 • Data Visualization")
+    
+    # Add dropdown for visualization options
+    viz_option = st.selectbox(
+        "Choose Visualization Type:",
+        ["All Visualizations", "Quality Distribution", "Correlation Heatmap", "Feature Relationships"],
+        key="viz_selector"
+    )
+    
+    if viz_option in ["All Visualizations", "Quality Distribution"]:
+        st.subheader("Quality Distribution")
+        fig1, ax1 = plt.subplots(figsize=(10, 6))
+        sns.countplot(x="quality", data=df, ax=ax1, palette="RdPu")
+        ax1.set_xlabel("Quality (score)")
+        ax1.set_ylabel("Count")
+        ax1.set_title("Frequency of Wine Quality Ratings", color="#720026")
+        st.pyplot(fig1)
 
-elif page == "Prediction":
-    st.subheader("03 Prediction Modeling")
+    if viz_option in ["All Visualizations", "Correlation Heatmap"]:
+        st.subheader("Feature Correlations")
+        fig2, ax2 = plt.subplots(figsize=(10, 8))
+        corr = df.corr(numeric_only=True)
+        sns.heatmap(corr, cmap="RdBu_r", center=0, linewidths=0.3, ax=ax2, annot=True, fmt=".2f")
+        ax2.set_title("Correlation Among Wine Features", color="#720026")
+        st.pyplot(fig2)
 
-    # features/target
+    if viz_option in ["All Visualizations", "Feature Relationships"]:
+        st.subheader("Feature vs Quality Relationship")
+        # Add dropdown for feature selection
+        feature_choice = st.selectbox(
+            "Select feature to compare with quality:",
+            [col for col in df.columns if col != 'quality'],
+            key="feature_choice"
+        )
+        
+        fig3, ax3 = plt.subplots(figsize=(10, 6))
+        sns.stripplot(x="quality", y=feature_choice, data=df, alpha=0.7, ax=ax3, palette="Reds")
+        ax3.set_title(f"{feature_choice.title()} vs Quality Rating", color="#720026")
+        ax3.set_xlabel("Quality Score")
+        ax3.set_ylabel(feature_choice.title())
+        st.pyplot(fig3)
+
+# --- PREDICTION PAGE ---
+elif page == "🔮 Prediction":
+    st.header("03 • Prediction Modeling")
+    st.subheader("Select features for the model")
+    
     target_col = "quality"
     feature_cols = [c for c in df.columns if c != target_col]
-
-    st.markdown("**Select features for the model**")
+    
     chosen_features = st.multiselect(
         "Features",
         options=feature_cols,
-        default=feature_cols,  # all by default
+        default=feature_cols,
+        help="Select which chemical properties to include in the model"
     )
-
+    st.markdown('</div>', unsafe_allow_html=True)
+    
     if len(chosen_features) == 0:
         st.info("Please select at least one feature.")
         st.stop()
 
+    # Simple test size slider
+    test_size = st.slider("Test size (%)", 10, 40, 20, step=5)
+
+    # Prepare data and train model
     X = df[chosen_features]
     y = df[target_col]
 
-    test_size = st.slider("Test size (%)", 10, 40, 20, step=5)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size / 100.0, random_state=42
     )
 
-    # model training
     model = LinearRegression()
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
 
-    # metrics
+    # Calculate metrics
     mse = mean_squared_error(y_test, y_pred)
     mae = mean_absolute_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
 
-    st.markdown("#### Model Performance")
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Mean Squared Error (MSE)", f"{mse:.3f}")
-    c2.metric("Mean Absolute Error (MAE)", f"{mae:.3f}")
-    c3.metric("R² Score", f"{r2:.3f}")
+    # Display metrics in styled cards
+    st.subheader("Model Performance")
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Mean Squared Error (MSE)", f"{mse:.3f}")
+    with col2:
+        st.metric("Mean Absolute Error (MAE)", f"{mae:.3f}")
+    with col3:
+        st.metric("R² Score", f"{r2:.3f}")
 
-    # scatter: Actual vs Predicted, hue = |error|
+    # Visualization
+    st.subheader("Actual vs Predicted (Hue = |Error|)")
+    
     plot_df = y_test.reset_index(drop=True).to_frame(name="Actual")
     plot_df["Predicted"] = y_pred
     plot_df["Error"] = (plot_df["Actual"] - plot_df["Predicted"]).abs()
 
-    st.markdown("#### Actual vs Predicted (Hue = |Error|)")
-    fig, ax = plt.subplots(figsize=(8, 6))
-    sns.scatterplot(
+    fig, ax = plt.subplots(figsize=(10, 6))
+    scatter = sns.scatterplot(
         data=plot_df,
         x="Actual",
         y="Predicted",
@@ -130,20 +226,35 @@ elif page == "Prediction":
         edgecolor=None,
         ax=ax,
         legend=True,
+        s=80
     )
+    
     line_min = float(plot_df[["Actual", "Predicted"]].min().min())
     line_max = float(plot_df[["Actual", "Predicted"]].max().max())
-    ax.plot([line_min, line_max], [line_min, line_max], "--", color="gray")
+    ax.plot([line_min, line_max], [line_min, line_max], "--", color="gray", linewidth=2)
     ax.set_xlabel("Actual Quality")
     ax.set_ylabel("Predicted Quality")
-    ax.set_title("Actual vs Predicted Wine Quality")
+    ax.set_title("Actual vs Predicted Wine Quality", color="#720026")
     ax.grid(True, linestyle="--", alpha=0.3)
     ax.legend(title="|Error|")
     st.pyplot(fig)
 
-    st.markdown(
-        "###### Notes\n"
-        "- Linear Regression provides a simple baseline; a modest R² is common on this dataset.\n"
-        "- Consider regularization (Ridge/Lasso), tree ensembles, or non-linear models for better accuracy.\n"
-        "- Feature engineering (e.g., interactions, log transforms) can further improve performance."
-    )
+    # Feature importance - simple version
+    st.subheader("Feature Importance")
+    
+    importance_df = pd.DataFrame({
+        'Feature': chosen_features,
+        'Coefficient': model.coef_,
+        'Impact on Quality': ['Positive' if x > 0 else 'Negative' for x in model.coef_]
+    }).sort_values('Coefficient', key=lambda x: abs(x), ascending=False)
+    
+    st.dataframe(importance_df, use_container_width=True)
+
+    # Notes section
+    st.markdown("""
+    ---
+    **Notes**
+    - Linear Regression provides a simple baseline; a modest R² is common on this dataset.
+    - Consider regularization (Ridge/Lasso), tree ensembles, or non-linear models for better accuracy.
+    - Feature engineering (e.g., interactions, log transforms) can further improve performance.
+    """)
