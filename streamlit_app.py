@@ -59,22 +59,24 @@ st.sidebar.title("🍷 Navigation")
 st.sidebar.markdown("Navigate through different sections of the app.")
 page = st.sidebar.radio(
     "Go to section:",
-    ["🏠 Introduction", "📊 Visualization", "🔮 Prediction"]
+    ["Introduction", "Visualization", "Prediction"]
 )
 
 # --- PAGE TITLE ---
 st.title("🍇 Wine Quality Prediction App")
 
 # Only show welcome message on Introduction page
-if page == "🏠 Introduction":
+if page == "Introduction":
+    st.image("wine.jpg", use_container_width=True)
+
     st.markdown("""
     Welcome to our Wine Quality Prediction App!  
 
     Navigate through the sidebar to explore our project:
 
-    - **🏠 Introduction** – Explore dataset structure and statistics  
-    - **📊 Visualization** – Discover key insights through charts  
-    - **🔮 Prediction** – Predict wine quality using Linear Regression  
+    - **Introduction** – Explore dataset structure and statistics  
+    - **Visualization** – Discover key insights through charts  
+    - **Prediction** – Predict wine quality using Linear Regression  
     """)
 
     st.markdown("""
@@ -83,7 +85,7 @@ if page == "🏠 Introduction":
     """)
 
 # --- INTRODUCTION PAGE ---
-if page == "🏠 Introduction":
+if page == "Introduction":
     st.header("01 • Introduction")
     st.markdown("""
     Wine tasting is both an art and a science.
@@ -99,7 +101,7 @@ if page == "🏠 Introduction":
         st.subheader("Data Quality")
         missing = df.isnull().sum()
         if missing.sum() == 0:
-            st.success("✨ No missing values found")
+            st.success("No missing values found")
         else:
             st.warning("⚠️ Some missing values detected")
         
@@ -115,7 +117,7 @@ if page == "🏠 Introduction":
     st.dataframe(df.describe(), use_container_width=True)
 
 # --- VISUALIZATION PAGE ---
-elif page == "📊 Visualization":
+elif page == "Visualization":
     st.header("02 • Data Visualization")
     
     # Add dropdown for visualization options
@@ -159,7 +161,7 @@ elif page == "📊 Visualization":
         st.pyplot(fig3)
 
 # --- PREDICTION PAGE ---
-elif page == "🔮 Prediction":
+elif page == "Prediction":
     st.header("03 • Prediction Modeling")
     st.subheader("Select features for the model")
     
