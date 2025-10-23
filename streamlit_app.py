@@ -174,8 +174,7 @@ elif page == "Prediction":
         default=feature_cols,
         help="Select which chemical properties to include in the model"
     )
-    st.markdown('</div>', unsafe_allow_html=True)
-    
+ 
     if len(chosen_features) == 0:
         st.info("Please select at least one feature.")
         st.stop()
