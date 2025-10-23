@@ -63,7 +63,7 @@ page = st.sidebar.radio(
 )
 
 # --- PAGE TITLE ---
-st.title("🍇 Wine Quality Prediction App 2")
+st.title("🍇 Wine Quality Prediction App")
 
 # Only show welcome message on Introduction page
 if page == "Introduction":
