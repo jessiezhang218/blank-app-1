@@ -300,6 +300,7 @@ elif page == "Conclusion":
         """)
     
     with col2:
+        st.markdown("""
         **For the Industry**:
         - Establish objective quality standards beyond subjective tasting
         - Enable consistent quality across different production batches
