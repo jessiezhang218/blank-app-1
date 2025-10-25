@@ -297,6 +297,7 @@ elif page == "Conclusion":
         - Optimize recipes by increasing alcohol and controlling acidity
         - Reduce quality control costs by 60-80% through automated assessment
         - Make data-driven decisions about production adjustments
+        """)
     
     with col2:
         **For the Industry**:
