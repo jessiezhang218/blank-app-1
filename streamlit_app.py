@@ -269,7 +269,7 @@ elif page == "Conclusion":
     - **Offers fast predictions** during production for real-time quality control
     """)
     
-    st.subheader("📊 Key Findings")
+    st.subheader("Key Findings")
     col1, col2 = st.columns(2)
     
     with col1:
@@ -288,22 +288,19 @@ elif page == "Conclusion":
         - Predictions typically within ±0.5 points of expert scores
         """)
     
-    st.subheader("💡 Business Impact")
-    st.markdown("""
-    **For Wine Producers**:
-    - Optimize recipes by increasing alcohol and controlling acidity
-    - Reduce quality control costs by 60-80% through automated assessment
-    - Make data-driven decisions about production adjustments
+    st.subheader("Business Impact")
+
+    with col1:
+        st.markdown("""
+        **For Wine Producers**:
+        - Optimize recipes by increasing alcohol and controlling acidity
+        - Reduce quality control costs by 60-80% through automated assessment
+        - Make data-driven decisions about production adjustments
     
-    **For the Industry**:
-    - Establish objective quality standards beyond subjective tasting
-    - Enable consistent quality across different production batches
-    - Provide scientific basis for pricing and marketing decisions
-    """)
+    with col2:
+        **For the Industry**:
+        - Establish objective quality standards beyond subjective tasting
+        - Enable consistent quality across different production batches
+        - Provide scientific basis for pricing and marketing decisions
+        """)
     
-    st.markdown("</div>", unsafe_allow_html=True)
-    
-    st.markdown("---")
-    st.success("""
-    **Project Success**: Our Wine Quality Prediction App demonstrates how machine learning can transform traditional industries by providing objective, data-driven insights for quality improvement and cost reduction.
-    """)
