@@ -21,6 +21,7 @@ st.markdown("""
         background-color: #f7f3ef;
         color: #4b0d1a;
         font-family: 'Georgia', serif;
+        font-size: 18px;
     }
     h1, h2, h3, h4, h5 {
         color: #720026 !important;
@@ -29,14 +30,17 @@ st.markdown("""
     .stSidebar {
         background-color: #f4ebe2 !important;
         color: #4b0d1a !important;
+        font-size: 18px;
     }
     .stSelectbox, .stSlider, .stMultiSelect, .stButton>button {
         color: #4b0d1a !important;
+        font-size: 16px;
     }
     .stMetric {
         background-color: #f0e3da !important;
         border-radius: 10px;
         padding: 5px;
+        font-size: 16px;
     }
     hr {
         border-top: 1px solid #a34a54;
@@ -47,6 +51,7 @@ st.markdown("""
         border-radius: 10px;
         border-left: 4px solid #720026;
         margin: 10px 0;
+        font-size: 18px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -80,16 +85,18 @@ if page == "Introduction":
     - **Conclusion** - Project summary and business impact
     """)
 
-    st.markdown("""
-    Explore, analyze, and predict wine quality through data and machine learning.  
-    Our goal: to understand what makes a fine wine truly exceptional.
-    """)
-
 if page == "Introduction":
     st.header("01 • Introduction")
     st.markdown("""
     Wine tasting is both an art and a science.
     Wineries need a reliable way to predict wine quality before bottling or selling. By analyzing the wine's chemical properties, we can estimate its quality score. This helps producers improve quality control, adjust production, and set pricing strategies.
+    
+    **The Challenge:** Wineries face significant challenges in quality control and production optimization:
+    
+    - **Time-Consuming Process**: Traditional wine tasting requires expert panels and takes days or weeks
+    - **High Costs**: Maintaining tasting panels is expensive and labor-intensive  
+    - **Subjectivity**: Different experts may rate the same wine differently
+    - **Inconsistency**: Quality assessment varies between batches and tasters
     """)
 
     st.subheader("Dataset Preview")
