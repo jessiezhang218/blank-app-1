@@ -17,11 +17,13 @@ st.set_page_config(
 # Wine theme with burgundy and beige 
 st.markdown("""
     <style>
+    html, body, [class*="css"]  {
+        font-size: 18px !important;
+    }
     .stApp {
         background-color: #f7f3ef;
         color: #4b0d1a;
         font-family: 'Georgia', serif;
-        font-size: 36px;
     }
     h1, h2, h3, h4, h5 {
         color: #720026 !important;
@@ -30,17 +32,14 @@ st.markdown("""
     .stSidebar {
         background-color: #f4ebe2 !important;
         color: #4b0d1a !important;
-        font-size: 36px;
     }
     .stSelectbox, .stSlider, .stMultiSelect, .stButton>button {
         color: #4b0d1a !important;
-        font-size: 32px;
     }
     .stMetric {
         background-color: #f0e3da !important;
         border-radius: 10px;
         padding: 5px;
-        font-size: 32px;
     }
     hr {
         border-top: 1px solid #a34a54;
@@ -51,7 +50,6 @@ st.markdown("""
         border-radius: 10px;
         border-left: 4px solid #720026;
         margin: 10px 0;
-        font-size: 36px;
     }
     </style>
 """, unsafe_allow_html=True)
