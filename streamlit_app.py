@@ -18,7 +18,7 @@ st.set_page_config(
 st.markdown("""
     <style>
     html, body, [class*="css"]  {
-        font-size: 20px !important;
+        font-size: 18px !important;
     }
     .stApp {
         background-color: #f7f3ef;
