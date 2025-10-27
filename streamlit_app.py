@@ -250,14 +250,6 @@ elif page == "Prediction":
     
     st.dataframe(importance_df, use_container_width=True)
 
-    # Notes
-    st.markdown("""
-    ---
-    **Notes**
-    - Linear Regression provides a simple baseline; a modest R² is common on this dataset.
-    - Consider regularization (Ridge/Lasso), tree ensembles, or non-linear models for better accuracy.
-    - Feature engineering (e.g., interactions, log transforms) can further improve performance.
-    """)
 
 # Conclusion page
 elif page == "Conclusion":
